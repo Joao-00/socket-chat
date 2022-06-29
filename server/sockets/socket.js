@@ -9,14 +9,18 @@ io.on('connection', (client) => {
 
     client.on('entrarChat', (data, callback) =>{
 
-        if (!data.nombre) {
+        console.log(data);
+
+        if (!data.nombre || !data.sala) {
             return callback({
                 error: true,
-                mensaje: 'El nombre es necesario'
+                mensaje: 'El nombre/sala es necesario'
             })
         }
 
-        let personas = usuarios.agregarPersonas(client.id, data.nombre);
+        client.join(data.sala);
+
+        let personas = usuarios.agregarPersonas(client.id, data.nombre, data.sala);
 
         client.broadcast.emit('listaPersona', usuarios.getPersonas());
 
